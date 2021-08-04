@@ -15,6 +15,7 @@ type StyledOverlayProps = {
   maxHeight?: keyof Omit<typeof heightMap, 'auto' | 'initial'>
   visibility?: 'visible' | 'hidden'
   anchorSide?: AnchorSide
+  portalContainerName?: string
 }
 
 const heightMap = {
@@ -88,6 +89,7 @@ export type OverlayProps = {
   onEscape: (e: KeyboardEvent) => void
   visibility?: 'visible' | 'hidden'
   [additionalKey: string]: unknown
+  portalContainerName?: string
 } & Omit<ComponentProps<typeof StyledOverlay>, 'visibility' | keyof SystemPositionProps>
 
 /**
@@ -103,6 +105,7 @@ export type OverlayProps = {
  * @param height Sets the height of the `Overlay`, pick from our set list of heights, or pass `auto` to automatically set the height based on the content of the `Overlay`, or pass `initial` to set the height based on the initial content of the `Overlay` (i.e. ignoring content changes). `xsmall` corresponds to `192px`, `small` corresponds to `256px`, `medium` corresponds to `320px`, `large` corresponds to `432px`, `xlarge` corresponds to `600px`.
  * @param maxHeight Sets the maximum height of the `Overlay`, pick from our set list of heights. `xsmall` corresponds to `192px`, `small` corresponds to `256px`, `medium` corresponds to `320px`, `large` corresponds to `432px`, `xlarge` corresponds to `600px`.
  * @param anchorSide If provided, the Overlay will slide into position from the side of the anchor with a brief animation
+ * @param portalContainerName?: string
  */
 const Overlay = React.forwardRef<HTMLDivElement, OverlayProps>(
   (
@@ -116,6 +119,7 @@ const Overlay = React.forwardRef<HTMLDivElement, OverlayProps>(
       visibility = 'visible',
       height,
       anchorSide,
+      portalContainerName,
       ...rest
     },
     forwardedRef
@@ -158,7 +162,7 @@ const Overlay = React.forwardRef<HTMLDivElement, OverlayProps>(
     }, [anchorSide, slideAnimationDistance, slideAnimationEasing, visibility])
 
     return (
-      <Portal>
+      <Portal {...(portalContainerName ? {containerName: portalContainerName} : {})}>
         <StyledOverlay
           height={height}
           role={role}

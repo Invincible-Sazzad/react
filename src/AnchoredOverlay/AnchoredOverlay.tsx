@@ -62,6 +62,11 @@ interface AnchoredOverlayBaseProps extends Pick<OverlayProps, 'height' | 'width'
    * Settings to apply to the Focus Zone on the internal `Overlay` component.
    */
   focusZoneSettings?: Partial<FocusZoneHookSettings>
+
+  /**
+   * Sets the portal container for the overlay. Useful when the overlay is inside a scrolling element.
+   */
+  portalContainerName?: string
 }
 
 export type AnchoredOverlayProps = AnchoredOverlayBaseProps &
@@ -82,7 +87,8 @@ export const AnchoredOverlay: React.FC<AnchoredOverlayProps> = ({
   width,
   overlayProps,
   focusTrapSettings,
-  focusZoneSettings
+  focusZoneSettings,
+  portalContainerName
 }) => {
   const anchorRef = useProvidedRefOrCreate(externalAnchorRef)
   const [overlayRef, updateOverlayRef] = useRenderForcingRef<HTMLDivElement>()
@@ -164,6 +170,7 @@ export const AnchoredOverlay: React.FC<AnchoredOverlayProps> = ({
           visibility={position ? 'visible' : 'hidden'}
           height={height}
           width={width}
+          {...(portalContainerName ? {portalContainerName} : {})}
           {...overlayPosition}
           {...overlayProps}
         >
